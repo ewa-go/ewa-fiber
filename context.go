@@ -17,12 +17,12 @@ func (c *Context) Render(name string, bind interface{}, layouts ...string) error
 	return c.Ctx.Render(name, bind, layouts...)
 }
 
-func (c *Context) Params(key string) string {
-	return c.Ctx.Params(key)
+func (c *Context) Params(key string, defaultValue ...string) string {
+	return c.Ctx.Params(key, defaultValue...)
 }
 
-func (c *Context) Get(key string) string {
-	return c.Ctx.Get(key)
+func (c *Context) Get(key string, defaultValue ...string) string {
+	return c.Ctx.Get(key, defaultValue...)
 }
 
 func (c *Context) Set(key, value string) {
@@ -77,6 +77,10 @@ func (c *Context) SendFile(file string) error {
 	return c.Ctx.SendFile(file)
 }
 
+func (c *Context) SaveFile(fileHeader *multipart.FileHeader, path string) error {
+	return c.Ctx.SaveFile(fileHeader, path)
+}
+
 func (c *Context) SendStream(code int, contentType string, stream io.Reader) error {
 	c.Ctx.Set(fiber.HeaderContentType, contentType)
 	return c.Ctx.Status(code).SendStream(stream)
@@ -94,16 +98,22 @@ func (c *Context) BodyParser(out interface{}) error {
 	return c.Ctx.BodyParser(out)
 }
 
-func (c *Context) QueryParam(name string) string {
-	return c.Ctx.Query(name)
+func (c *Context) QueryParam(name string, defaultValue ...string) string {
+	return c.Ctx.Query(name, defaultValue...)
 }
 
-func (c *Context) QueryParams() url.Values {
+func (c *Context) QueryValues() url.Values {
 	values := url.Values{}
 	c.Ctx.Request().URI().QueryArgs().VisitAll(func(key, value []byte) {
 		values.Set(string(key), string(value))
 	})
 	return values
+}
+
+func (c *Context) QueryParams(h func(key, value string)) {
+	c.Ctx.Request().URI().QueryArgs().VisitAll(func(key, value []byte) {
+		h(string(key), string(value))
+	})
 }
 
 func (c *Context) Hostname() string {

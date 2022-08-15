@@ -1,12 +1,12 @@
 package fiber
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"github.com/gofiber/fiber/v2"
+)
 
 type Server struct {
 	App *fiber.App
 }
-
-type Handler func(c *Context) error
 
 func (s *Server) Start(addr string) (err error) {
 	return s.App.Listen(addr)
@@ -35,10 +35,8 @@ func (s *Server) Use(params ...interface{}) {
 	s.App.Use(params)
 }
 
-func (s *Server) Add(method, path string, handler Handler) {
-	s.App.Add(method, path, func(ctx *fiber.Ctx) error {
-		return handler(&Context{Ctx: ctx})
-	})
+func (s *Server) Add(method, path string, handler interface{}) {
+	s.App.Add(method, path, handler.(fiber.Handler))
 }
 
 func (s *Server) GetApp() interface{} {
@@ -49,4 +47,8 @@ func (s *Server) NotFoundPage(path, page string) {
 	s.App.Use(func(ctx *fiber.Ctx) error {
 		return ctx.Render(page, nil)
 	})
+}
+
+func (s *Server) ConvertParam(param string) string {
+	return ":" + param
 }
