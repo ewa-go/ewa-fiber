@@ -2,6 +2,7 @@ package fiber
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"golang.org/x/net/context"
 	"io"
 	"mime/multipart"
 	"net/http"
@@ -135,4 +136,12 @@ func (c *Context) Scheme() string {
 
 func (c *Context) MultipartForm() (*multipart.Form, error) {
 	return c.Ctx.MultipartForm()
+}
+
+func (c *Context) IP() string {
+	return c.Ctx.IP()
+}
+
+func (c *Context) Context() context.Context {
+	return c.Ctx.Context()
 }
