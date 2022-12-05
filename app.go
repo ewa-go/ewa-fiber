@@ -2,6 +2,7 @@ package fiber
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"net"
 )
 
 type Server struct {
@@ -15,6 +16,16 @@ func (s *Server) Start(addr string) (err error) {
 func (s *Server) StartTLS(addr, cert, key string) (err error) {
 	// Запускаем слушатель с TLS настройкой
 	return s.App.ListenTLS(addr, cert, key)
+}
+
+func (s *Server) StartMutualTLS(addr, cert, key, clientCert string) (err error) {
+	// Запускаем слушатель с TLS настройкой
+	return s.App.ListenMutualTLS(addr, cert, key, clientCert)
+}
+
+func (s *Server) Listener(ln net.Listener) (err error) {
+	// Запускаем слушатель с TLS настройкой
+	return s.App.Listener(ln)
 }
 
 func (s *Server) Stop() error {
