@@ -145,3 +145,50 @@ func (c *Context) IP() string {
 func (c *Context) Context() context.Context {
 	return c.Ctx.Context()
 }
+
+func (c *Context) Method() string {
+	return c.Ctx.Method()
+}
+
+func (c *Context) HttpRequest() *http.Request {
+	return nil
+}
+
+func (c *Context) Request() interface{} {
+	return c.Ctx.Request()
+	/*	return &http.Request{
+		Method: string(req.Header.Method()),
+		URL: &url.URL{
+			Scheme:      string(req.URI().Scheme()),
+			Opaque:      "",
+			User:        url.UserPassword(req.Header.Us),
+			Host:        "",
+			Path:        "",
+			RawPath:     "",
+			OmitHost:    false,
+			ForceQuery:  false,
+			RawQuery:    "",
+			Fragment:    "",
+			RawFragment: "",
+		},
+		Proto:            "",
+		ProtoMajor:       0,
+		ProtoMinor:       0,
+		Header:           req.Header.H,
+		Body:             nil,
+		GetBody:          ,
+		ContentLength:    int64(req.Header.ContentLength()),
+		TransferEncoding: nil,
+		Close:            false,
+		Host:             string(req.Host()),
+		Form:             nil,
+		PostForm:         nil,
+		MultipartForm:    nil,
+		Trailer:          nil,
+		RemoteAddr:       "",
+		RequestURI:       string(req.RequestURI()),
+		TLS:              nil,
+		Cancel:           nil,
+		Response:         nil,
+	}*/
+}
