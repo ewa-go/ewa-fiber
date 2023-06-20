@@ -1,5 +1,6 @@
 package fiber
 
+import "C"
 import (
 	"github.com/gofiber/fiber/v2"
 	"golang.org/x/net/context"
@@ -11,31 +12,31 @@ import (
 )
 
 type Context struct {
-	Ctx *fiber.Ctx
+	ctx *fiber.Ctx
 }
 
 func (c *Context) Render(name string, bind interface{}, layouts ...string) error {
-	return c.Ctx.Render(name, bind, layouts...)
+	return c.ctx.Render(name, bind, layouts...)
 }
 
 func (c *Context) Params(key string, defaultValue ...string) string {
-	return c.Ctx.Params(key, defaultValue...)
+	return c.ctx.Params(key, defaultValue...)
 }
 
 func (c *Context) Get(key string, defaultValue ...string) string {
-	return c.Ctx.Get(key, defaultValue...)
+	return c.ctx.Get(key, defaultValue...)
 }
 
 func (c *Context) Set(key, value string) {
-	c.Ctx.Set(key, value)
+	c.ctx.Set(key, value)
 }
 
 func (c *Context) SendStatus(code int) error {
-	return c.Ctx.SendStatus(code)
+	return c.ctx.SendStatus(code)
 }
 
 func (c *Context) Cookies(key string) string {
-	return c.Ctx.Cookies(key)
+	return c.ctx.Cookies(key)
 }
 
 func (c *Context) SetCookie(cookie *http.Cookie) {
@@ -50,104 +51,108 @@ func (c *Context) SetCookie(cookie *http.Cookie) {
 		HTTPOnly: cookie.HttpOnly,
 		SameSite: strconv.Itoa(int(cookie.SameSite)),
 	}
-	c.Ctx.Cookie(fc)
+	c.ctx.Cookie(fc)
 }
 
 func (c *Context) ClearCookie(key string) {
-	c.Ctx.ClearCookie(key)
+	c.ctx.ClearCookie(key)
 }
 
 func (c *Context) Redirect(location string, status int) error {
-	return c.Ctx.Redirect(location, status)
+	return c.ctx.Redirect(location, status)
 }
 
 func (c *Context) Path() string {
-	return c.Ctx.Path()
+	return c.ctx.Path()
 }
 
 func (c *Context) SendString(code int, s string) error {
-	return c.Ctx.Status(code).SendString(s)
+	return c.ctx.Status(code).SendString(s)
 }
 
 func (c *Context) Send(code int, contentType string, b []byte) error {
-	c.Ctx.Set(fiber.HeaderContentType, contentType)
-	return c.Ctx.Status(code).Send(b)
+	c.ctx.Set(fiber.HeaderContentType, contentType)
+	return c.ctx.Status(code).Send(b)
 }
 
 func (c *Context) SendFile(file string) error {
-	return c.Ctx.SendFile(file)
+	return c.ctx.SendFile(file)
 }
 
 func (c *Context) SaveFile(fileHeader *multipart.FileHeader, path string) error {
-	return c.Ctx.SaveFile(fileHeader, path)
+	return c.ctx.SaveFile(fileHeader, path)
 }
 
 func (c *Context) SendStream(code int, contentType string, stream io.Reader) error {
-	c.Ctx.Set(fiber.HeaderContentType, contentType)
-	return c.Ctx.Status(code).SendStream(stream)
+	c.ctx.Set(fiber.HeaderContentType, contentType)
+	return c.ctx.Status(code).SendStream(stream)
 }
 
 func (c *Context) JSON(code int, data interface{}) error {
-	return c.Ctx.Status(code).JSON(data)
+	return c.ctx.Status(code).JSON(data)
 }
 
 func (c *Context) Body() []byte {
-	return c.Ctx.Body()
+	return c.ctx.Body()
 }
 
 func (c *Context) BodyParser(out interface{}) error {
-	return c.Ctx.BodyParser(out)
+	return c.ctx.BodyParser(out)
 }
 
 func (c *Context) QueryParam(name string, defaultValue ...string) string {
-	return c.Ctx.Query(name, defaultValue...)
+	return c.ctx.Query(name, defaultValue...)
 }
 
 func (c *Context) QueryValues() url.Values {
 	values := url.Values{}
-	c.Ctx.Request().URI().QueryArgs().VisitAll(func(key, value []byte) {
+	c.ctx.Request().URI().QueryArgs().VisitAll(func(key, value []byte) {
 		values.Set(string(key), string(value))
 	})
 	return values
 }
 
 func (c *Context) QueryParams(h func(key, value string)) {
-	c.Ctx.Request().URI().QueryArgs().VisitAll(func(key, value []byte) {
+	c.ctx.Request().URI().QueryArgs().VisitAll(func(key, value []byte) {
 		h(string(key), string(value))
 	})
 }
 
 func (c *Context) Hostname() string {
-	return c.Ctx.Hostname()
+	return c.ctx.Hostname()
 }
 
 func (c *Context) FormValue(name string) string {
-	return c.Ctx.FormValue(name)
+	return c.ctx.FormValue(name)
 }
 
 func (c *Context) FormFile(name string) (*multipart.FileHeader, error) {
-	c.Ctx.Port()
-	return c.Ctx.FormFile(name)
+	c.ctx.Port()
+	return c.ctx.FormFile(name)
 }
 
 func (c *Context) Scheme() string {
-	return c.Ctx.Protocol()
+	return c.ctx.Protocol()
 }
 
 func (c *Context) MultipartForm() (*multipart.Form, error) {
-	return c.Ctx.MultipartForm()
+	return c.ctx.MultipartForm()
 }
 
 func (c *Context) IP() string {
-	return c.Ctx.IP()
+	return c.ctx.IP()
 }
 
 func (c *Context) Context() context.Context {
-	return c.Ctx.Context()
+	return c.ctx.Context()
+}
+
+func (c *Context) Ctx() interface{} {
+	return c.ctx
 }
 
 func (c *Context) Method() string {
-	return c.Ctx.Method()
+	return c.ctx.Method()
 }
 
 func (c *Context) HttpRequest() *http.Request {
@@ -155,40 +160,5 @@ func (c *Context) HttpRequest() *http.Request {
 }
 
 func (c *Context) Request() interface{} {
-	return c.Ctx.Request()
-	/*	return &http.Request{
-		Method: string(req.Header.Method()),
-		URL: &url.URL{
-			Scheme:      string(req.URI().Scheme()),
-			Opaque:      "",
-			User:        url.UserPassword(req.Header.Us),
-			Host:        "",
-			Path:        "",
-			RawPath:     "",
-			OmitHost:    false,
-			ForceQuery:  false,
-			RawQuery:    "",
-			Fragment:    "",
-			RawFragment: "",
-		},
-		Proto:            "",
-		ProtoMajor:       0,
-		ProtoMinor:       0,
-		Header:           req.Header.H,
-		Body:             nil,
-		GetBody:          ,
-		ContentLength:    int64(req.Header.ContentLength()),
-		TransferEncoding: nil,
-		Close:            false,
-		Host:             string(req.Host()),
-		Form:             nil,
-		PostForm:         nil,
-		MultipartForm:    nil,
-		Trailer:          nil,
-		RemoteAddr:       "",
-		RequestURI:       string(req.RequestURI()),
-		TLS:              nil,
-		Cancel:           nil,
-		Response:         nil,
-	}*/
+	return c.ctx.Request()
 }
