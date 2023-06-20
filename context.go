@@ -15,8 +15,8 @@ type Context struct {
 	ctx *fiber.Ctx
 }
 
-func IContext(ctx *fiber.Ctx) Context {
-	return Context{
+func IContext(ctx *fiber.Ctx) *Context {
+	return &Context{
 		ctx: ctx,
 	}
 }
