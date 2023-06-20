@@ -15,6 +15,12 @@ type Context struct {
 	ctx *fiber.Ctx
 }
 
+func IContext(ctx *fiber.Ctx) Context {
+	return Context{
+		ctx: ctx,
+	}
+}
+
 func (c *Context) Render(name string, bind interface{}, layouts ...string) error {
 	return c.ctx.Render(name, bind, layouts...)
 }
