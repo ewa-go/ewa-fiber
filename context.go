@@ -1,6 +1,5 @@
-package fiber
+package ef
 
-import "C"
 import (
 	"github.com/gofiber/fiber/v2"
 	"golang.org/x/net/context"
