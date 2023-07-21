@@ -2,6 +2,7 @@ package ef
 
 import (
 	"github.com/gofiber/fiber/v2"
+	adaptor "github.com/valyala/fasthttp/fasthttpadaptor"
 	"golang.org/x/net/context"
 	"io"
 	"mime/multipart"
@@ -160,8 +161,9 @@ func (c *Context) Method() string {
 	return c.ctx.Method()
 }
 
-func (c *Context) HttpRequest() *http.Request {
-	return nil
+func (c *Context) HttpRequest() (req *http.Request) {
+	_ = adaptor.ConvertRequest(c.ctx.Context(), req, true)
+	return
 }
 
 func (c *Context) Request() interface{} {
