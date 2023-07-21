@@ -161,9 +161,10 @@ func (c *Context) Method() string {
 	return c.ctx.Method()
 }
 
-func (c *Context) HttpRequest() (req *http.Request) {
+func (c *Context) HttpRequest() *http.Request {
+	req := &http.Request{}
 	_ = adaptor.ConvertRequest(c.ctx.Context(), req, true)
-	return
+	return req
 }
 
 func (c *Context) Request() interface{} {

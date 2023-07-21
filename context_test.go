@@ -17,10 +17,17 @@ func TestIContext(t *testing.T) {
 }
 
 func TestHttpRequest(t *testing.T) {
-	ctx := IContext(&fiber.Ctx{})
-	req, err := ctx.HttpRequest()
+
+	app := fiber.New()
+
+	app.Get("/", func(ctx *fiber.Ctx) error {
+		req := IContext(ctx).HttpRequest()
+		fmt.Printf("%s\n", req.URL)
+		return ctx.SendString("OK")
+	})
+
+	err := app.Listen(":8877")
 	if err != nil {
 		t.Fatal(err)
 	}
-	fmt.Printf("%v\n", req)
 }

@@ -9,6 +9,10 @@ type Server struct {
 	App *fiber.App
 }
 
+func IServer(app *fiber.App) *Server {
+	return &Server{App: app}
+}
+
 func (s *Server) Start(addr string) (err error) {
 	return s.App.Listen(addr)
 }
