@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+	"unsafe"
 )
 
 type Context struct {
@@ -162,11 +163,20 @@ func (c *Context) Method() string {
 }
 
 func (c *Context) HttpRequest() *http.Request {
+	ctx := c.ctx.Context()
+	uri := ctx.URI()
 	req := &http.Request{}
-	_ = adaptor.ConvertRequest(c.ctx.Context(), req, true)
+	_ = adaptor.ConvertRequest(ctx, req, true)
+	rawUrl, _ := url.ParseRequestURI(b2s(uri.FullURI()))
+	req.URL = rawUrl
 	return req
 }
 
 func (c *Context) Request() interface{} {
 	return c.ctx.Request()
+}
+
+func b2s(b []byte) string {
+	/* #nosec G103 */
+	return *(*string)(unsafe.Pointer(&b))
 }
