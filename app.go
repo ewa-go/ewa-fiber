@@ -9,6 +9,10 @@ type Server struct {
 	App *fiber.App
 }
 
+func NewServer(app *fiber.App) *Server {
+	return IServer(app)
+}
+
 func IServer(app *fiber.App) *Server {
 	return &Server{App: app}
 }
