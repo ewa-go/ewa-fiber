@@ -150,6 +150,10 @@ func (c *Context) IP() string {
 	return c.ctx.IP()
 }
 
+func (c *Context) IPs() []string {
+	return c.ctx.IPs()
+}
+
 func (c *Context) Context() context.Context {
 	return c.ctx.Context()
 }
