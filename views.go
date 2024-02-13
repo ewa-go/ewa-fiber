@@ -2,14 +2,14 @@ package ef
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/template/ace"
-	"github.com/gofiber/template/amber"
-	"github.com/gofiber/template/django"
-	"github.com/gofiber/template/handlebars"
-	"github.com/gofiber/template/html"
-	"github.com/gofiber/template/jet"
-	"github.com/gofiber/template/mustache"
-	"github.com/gofiber/template/pug"
+	"github.com/gofiber/template/ace/v2"
+	"github.com/gofiber/template/amber/v2"
+	"github.com/gofiber/template/django/v2"
+	"github.com/gofiber/template/handlebars/v2"
+	"github.com/gofiber/template/html/v2"
+	"github.com/gofiber/template/jet/v2"
+	"github.com/gofiber/template/mustache/v2"
+	"github.com/gofiber/template/pug/v2"
 )
 
 type Views struct {
@@ -41,6 +41,7 @@ const (
 	Jet        = ".jet"
 	Mustache   = ".mustache"
 	Pug        = ".pug"
+	Slim       = ".slim"
 )
 
 const (
@@ -207,6 +208,8 @@ func (v Views) engine() fiber.Views {
 		return e.mustache(v.Directory, v.Engine)
 	case Pug:
 		return e.pug(v.Directory, v.Engine)
+	case Slim:
+		//return e.slim(v.Directory, v.Engine)
 	}
 	return nil
 }

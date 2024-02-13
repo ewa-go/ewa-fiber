@@ -21,7 +21,7 @@ func TestHttpRequest(t *testing.T) {
 	app := fiber.New()
 
 	app.Get("/", func(ctx *fiber.Ctx) error {
-		req := IContext(ctx).HttpRequest()
+		req := NewContext(ctx).HttpRequest()
 		fmt.Printf("%s\n", req.URL)
 		return ctx.SendString("OK")
 	})
